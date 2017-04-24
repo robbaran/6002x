@@ -70,7 +70,6 @@ def greedy_cow_transport(cows,limit=10):
           transported_cows[cow] = 1  #mark this cow as transported
           trip_list.append(cow)      #add cow to this trip
           avail -= cows[cow] 	   #reduce avail for this trip by the cow we just took
-          print(cow, avail)
       total_list.append(trip_list)   #add this trip to the list of total trips
     return total_list  
 
@@ -96,9 +95,31 @@ def brute_force_cow_transport(cows,limit=10):
     trips
     """
     # TODO: Your code here
-    pass
+    best_num_trips = len(cows)	#worst-case number of trips it will take (one cow at a time)
+    #iterate through partitions of cows
+    for trip_list in get_partitions(cows):
+      invalid_trip = False
+      num_trips = 0
+    #check weight limit of each trip, give up if any trip goes over the limit
+      for trip in trip_list:
+        weight = 0
+        for cow in trip:
+          weight += cows[cow]	#accumulate total weight of cows on this trip
+        if weight > limit:	#if weight is over limit...
+          #print('invalid trip', trip)
+          invalid_trip = True
+          break			#...move on to next trip_list
+        num_trips += 1
+      if invalid_trip: 
+        #print('about to continue', trip_list)
+        continue
+      if num_trips <= best_num_trips:
+        best_trip_list = trip_list
+        best_num_trips = num_trips 
+    #keep track of num_trips if all trips in partitions meet weight req
+    #keep only this valid trip_list if it is shorter than the best_trip_list
+    return best_trip_list
 
-        
 # Problem 3
 def compare_cow_transport_algorithms():
     """
